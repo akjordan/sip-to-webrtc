@@ -2,7 +2,10 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @users = User.all
+    unless @user == current_user
+      redirect_to :back, :alert => "Access denied."
+    end
+    #@users = User.all
   end
 
   def show
