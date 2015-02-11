@@ -1,8 +1,6 @@
 class WebrtcAgentsController < ApplicationController
   before_action :set_webrtc_agent, only: [:show, :edit, :update, :destroy]
 
-  # GET /webrtc_agents
-  # GET /webrtc_agents.json
   def index
     @webrtc_agent = WebrtcAgent.find_by user_id: current_user.id
     capability = Twilio::Util::Capability.new Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token
@@ -10,58 +8,19 @@ class WebrtcAgentsController < ApplicationController
    @token = capability.generate()
   end
 
-  # GET /webrtc_agents/1
-  # GET /webrtc_agents/1.json
-  def show
-  end
-
-  # GET /webrtc_agents/new
-  # def new
-  #   @webrtc_agent = WebrtcAgent.new
-  # end
-
-  # GET /webrtc_agents/1/edit
-  def edit
-  end
-
-  # POST /webrtc_agents
-  # POST /webrtc_agents.json
   def new
     client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
     @number = client.account.incoming_phone_numbers.create( :area_code => '415')
 
     @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.name} domain",
-    :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "horriblefasakesasdaipdomain.sip.twilio.com")
+    :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "horrisdaipdomain.sip.twilio.com")
 
     @webrtc_agent = WebrtcAgent.new(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number, user_id: current_user.id)
 
-    respond_to do |format|
-      if @webrtc_agent.save
-        format.html { redirect_to @webrtc_agent, notice: 'Webrtc agent was successfully created.' }
-        format.json { render :show, status: :created, location: @webrtc_agent }
-      else
-        format.html { render :new }
-        format.json { render json: @webrtc_agent.errors, status: :unprocessable_entity }
-      end
-    end
+    redirect_to '/twilio',  notice: 'Webrtc agent was successfully created, maybe.'
+
   end
 
-  # PATCH/PUT /webrtc_agents/1
-  # PATCH/PUT /webrtc_agents/1.json
-  def update
-    respond_to do |format|
-      if @webrtc_agent.update(webrtc_agent_params)
-        format.html { redirect_to @webrtc_agent, notice: 'Webrtc agent was successfully updated.' }
-        format.json { render :show, status: :ok, location: @webrtc_agent }
-      else
-        format.html { render :edit }
-        format.json { render json: @webrtc_agent.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /webrtc_agents/1
-  # DELETE /webrtc_agents/1.json
   def destroy
     @webrtc_agent.destroy
     respond_to do |format|
