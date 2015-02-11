@@ -1,32 +1,41 @@
 class WebrtcAgentsController < ApplicationController
-  before_action :set_webrtc_agent, only: [:show, :edit, :update, :destroy]
-
+  before_filter :authenticate_user!
+  
   def index
-    @webrtc_agent = WebrtcAgent.find_by user_id: current_user.id
+    @webrtc_agent = current_user.webrtc_agent
+    
+    if @webrtc_agent.nil?
+      @webrtc_number =  'agent not created'
+      @webrtc_domain = 'agent not created'
+    else
+      @webrtc_number = @webrtc_agent.phone_number
+      @webrtc_domain = @webrtc_agent.sip_domain
+    end
+
     capability = Twilio::Util::Capability.new Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token
     capability.allow_client_incoming current_user.id
    @token = capability.generate()
   end
 
   def new
-    client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-    @number = client.account.incoming_phone_numbers.create( :area_code => '415')
+    # client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+    # @number = client.account.incoming_phone_numbers.create( :area_code => '415')
 
-    @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.name} domain",
-    :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "horrisdaipdomain.sip.twilio.com")
+    #TODO make this live
+    # @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.name} domain",
+    # :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "sasdad.sip.twilio.com")
 
-    @webrtc_agent = WebrtcAgent.new(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number, user_id: current_user.id)
+    #@webrtc_agent = current_user.build_webrtc_agent(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
+    @webrtc_agent = current_user.build_webrtc_agent(sip_domain: 'sipdomain.sip.twilio.com', phone_number: '+15623040621')
+
+    @webrtc_agent.save
 
     redirect_to '/twilio',  notice: 'Webrtc agent was successfully created, maybe.'
 
   end
 
-  def destroy
-    @webrtc_agent.destroy
-    respond_to do |format|
-      format.html { redirect_to webrtc_agents_url, notice: 'Webrtc agent was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+  def incoming
+
   end
 
   private
