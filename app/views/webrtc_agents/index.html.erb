@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <h1>YOUR SIP ENDPOINT</h1>
+      <p><%= @webrtc_agent.sip_domain%></p>
     </div>
     <div class="col-md-4">
       <div class="well well-lg">
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <h1>YOUR TWILIO NUMBER</h1>
+      <p><%= @webrtc_agent.phone_number%></p>
     </div>
   </div>
 </div>

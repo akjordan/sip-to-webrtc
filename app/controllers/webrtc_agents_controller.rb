@@ -4,7 +4,7 @@ class WebrtcAgentsController < ApplicationController
   # GET /webrtc_agents
   # GET /webrtc_agents.json
   def index
-    @webrtc_agents = WebrtcAgent.all
+    @webrtc_agent = WebrtcAgent.find_by user_id: current_user.id
     capability = Twilio::Util::Capability.new Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token
     capability.allow_client_incoming current_user.id
    @token = capability.generate()
@@ -16,9 +16,9 @@ class WebrtcAgentsController < ApplicationController
   end
 
   # GET /webrtc_agents/new
-  def new
-    @webrtc_agent = WebrtcAgent.new
-  end
+  # def new
+  #   @webrtc_agent = WebrtcAgent.new
+  # end
 
   # GET /webrtc_agents/1/edit
   def edit
@@ -26,8 +26,14 @@ class WebrtcAgentsController < ApplicationController
 
   # POST /webrtc_agents
   # POST /webrtc_agents.json
-  def create
-    @webrtc_agent = WebrtcAgent.new(webrtc_agent_params)
+  def new
+    client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+    @number = client.account.incoming_phone_numbers.create( :area_code => '415')
+
+    @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.name} domain",
+    :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "horriblefasakesasdaipdomain.sip.twilio.com")
+
+    @webrtc_agent = WebrtcAgent.new(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number, user_id: current_user.id)
 
     respond_to do |format|
       if @webrtc_agent.save
