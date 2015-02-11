@@ -1,31 +1,85 @@
-<p id="notice"><%= notice %></p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <h1>YOUR SIP ENDPOINT</h1>
+    </div>
+    <div class="col-md-4">
+      <div class="well well-lg">
+        <div class="btn-group" role="group" aria-label="...">
+          <button type="button" class="btn btn-success" onclick="accept();">
+            Accept
+          </button>
+          <button type="button" class="btn btn-danger" onclick="hangup();">
+            Hangup
+          </button>
+          <button id="mute-btn" type="button" class="btn btn-default" onclick="mute();">
+            Mute
+          </button>
+        </div>
+        <div class="panel-body" id="log" >Loading pigeons...</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h1>YOUR TWILIO NUMBER</h1>
+    </div>
+  </div>
+</div>
 
-<h1>Listing Webrtc Agents</h1>
+<script type="text/javascript"
+  src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js">
+</script>
 
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Sip domain</th>
-      <th>Phone number</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @webrtc_agents.each do |webrtc_agent| %>
-      <tr>
-        <td><%= webrtc_agent.user %></td>
-        <td><%= webrtc_agent.sip_domain %></td>
-        <td><%= webrtc_agent.phone_number %></td>
-        <td><%= link_to 'Show', webrtc_agent %></td>
-        <td><%= link_to 'Edit', edit_webrtc_agent_path(webrtc_agent) %></td>
-        <td><%= link_to 'Destroy', webrtc_agent, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<script type="text/javascript">
 
-<br>
+  /* Create the Client with a Capability Token */
+  Twilio.Device.setup("<%= @token %>", {debug: true});
+ 
+  /* Let us know when the client is ready. */
+  Twilio.Device.ready(function (device) {
+    $("#log").text("Client is ready ");
+  });
+ 
+  /* Report any errors on the screen */
+  Twilio.Device.error(function (error) {
+    $("#log").text("Error: " + error.message);
+  });
+ 
+  Twilio.Device.connect(function (conn) {
+    $("#log").text("SID:  " +  conn.parameters.CallSid);
+  });
+  
+  Twilio.Device.disconnect(function (conn) {
+    $("#log").text("Call ended");
+  });
 
-<%= link_to 'New Webrtc agent', new_webrtc_agent_path %>
+  Twilio.Device.incoming(function (conn) {
+    $("#log").text("Incoming connection from " + conn.parameters.From);
+  });
+
+  function hangup() {
+    Twilio.Device.disconnectAll();
+  }
+
+  function accept() {
+    Twilio.Device.activeConnection().accept();
+    $("#log").text("Connection active");
+  }
+//TODO implement mute
+  // function mute() {
+  //   if (Twilio.Device.activeConnection().isMuted() == false) {
+  //   Twilio.Device.activeConnection().mute(true);
+  // }
+  //   else { if (Twilio.Device.activeConnection().isMuted() == true)
+  //     Twilio.Device.activeConnection().mute(false);
+  //   else alert("hi");}
+  // }
+
+   $(function(){
+      $(".dropdown-menu").on('click', 'li a', function(){
+        $("#call-type").html($(this).text()+" <span class=\"caret\"></span>");
+        $("#call-type").val($(this).text());
+     });
+   });
+
+  </script>
