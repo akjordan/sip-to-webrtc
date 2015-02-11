@@ -1,6 +1,6 @@
 class WebrtcAgentsController < ApplicationController
   before_filter :authenticate_user!
-  
+
   def index
     @webrtc_agent = current_user.webrtc_agent
     

@@ -16,7 +16,7 @@
             Mute
           </button>
         </div>
-        <div class="panel-body" id="log" >Loading pigeons...</div>
+        <div class="panel-body" id="log" >Connecting to Twilio...</div>
       </div>
     </div>
     <div class="col-md-4">
@@ -32,9 +32,12 @@
 
 <script type="text/javascript">
 
-  /* Create the Client with a Capability Token */
-  Twilio.Device.setup("<%= @token %>", {debug: true});
- 
+/* Create the Client with a Capability Token */
+
+$( document ).ready(function() {
+    Twilio.Device.setup("<%= @token %>", {debug: true});
+  });
+
   /* Let us know when the client is ready. */
   Twilio.Device.ready(function (device) {
     $("#log").text("Client is ready ");
