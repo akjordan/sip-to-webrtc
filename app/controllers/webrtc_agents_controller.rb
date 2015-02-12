@@ -19,11 +19,11 @@ class WebrtcAgentsController < ApplicationController
 
   def new
     # client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-    # @number = client.account.incoming_phone_numbers.create( :area_code => '415')
+    # @number = client.account.incoming_phone_numbers.create( :area_code => '415', :voice_application_sid => 'AP9b8e247d43519a261098ec13d25606d8')
 
     #TODO make this live
-    # @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.name} domain",
-    # :voice_url => "https://dundermifflin.example.com/twilio/app.php", :domain_name => "sasdad.sip.twilio.com")
+    # @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
+    # :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => "sasdad.sip.twilio.com")
 
     #@webrtc_agent = current_user.build_webrtc_agent(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
     @webrtc_agent = current_user.build_webrtc_agent(sip_domain: 'sipdomain.sip.twilio.com', phone_number: '+15623040621')
