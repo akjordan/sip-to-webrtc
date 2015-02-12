@@ -18,19 +18,29 @@ class WebrtcAgentsController < ApplicationController
   end
 
   def new
-    # client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-    # @number = client.account.incoming_phone_numbers.create( :area_code => '415', :voice_application_sid => 'AP9b8e247d43519a261098ec13d25606d8')
 
-    #TODO make this live
-    # @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
-    # :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => "sasdad.sip.twilio.com")
+    begin
+      
+      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.chomp
 
-    #@webrtc_agent = current_user.build_webrtc_agent(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
-    @webrtc_agent = current_user.build_webrtc_agent(sip_domain: 'sipdomain.sip.twilio.com', phone_number: '+15623040621')
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      @number = client.account.incoming_phone_numbers.create( :area_code => '415',
+       :voice_url => 'https://akjordan.ngrok.com/incoming', :friendly_name => "#{current_user.email}'s Number")
 
-    @webrtc_agent.save
+      @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
+      :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => domain_string)
 
-    redirect_to '/twilio',  notice: 'Webrtc agent was successfully created, maybe.'
+    rescue Exception => e
+      puts e
+    end
+
+    @webrtc_agent = current_user.build_webrtc_agent(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
+    
+    if @webrtc_agent.save
+      redirect_to '/twilio',  notice: 'Webrtc agent was successfully created, maybe.'
+    else
+      redirect_to '/twilio',  notice: 'Something has gone terribly wrong'
+    end
 
   end
 
