@@ -25,10 +25,10 @@ class WebrtcAgentsController < ApplicationController
 
       client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
       @number = client.account.incoming_phone_numbers.create( :area_code => '415',
-       :voice_url => 'https://akjordan.ngrok.com/incoming', :friendly_name => "#{current_user.email}'s Number")
+       :voice_url => Rails.application.secrets.twilio_twiml_callback_url, :friendly_name => "#{current_user.email}'s Number")
 
       @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
-      :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => domain_string)
+      :voice_url => Rails.application.secrets.twilio_twiml_callback_url, :domain_name => domain_string)
 
     rescue Exception => e
       puts e
@@ -37,7 +37,7 @@ class WebrtcAgentsController < ApplicationController
     @webrtc_agent = current_user.build_webrtc_agent(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
     
     if @webrtc_agent.save
-      redirect_to '/twilio',  notice: 'Webrtc agent was successfully created, maybe.'
+      redirect_to '/twilio',  notice: 'Webrtc agent was probably successfully created...'
     else
       redirect_to '/twilio',  notice: 'Something has gone terribly wrong'
     end
