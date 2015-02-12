@@ -21,14 +21,14 @@ class WebrtcAgentsController < ApplicationController
 
     begin
       
-      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.chomp
+      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.gsub(/\s+/, "")
 
       client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
       @number = client.account.incoming_phone_numbers.create( :area_code => '415',
-       :voice_url => Rails.application.secrets.twilio_twiml_callback_url, :friendly_name => "#{current_user.email}'s Number")
+       :voice_url => "https://akjordan.ngrok.com/incoming", :friendly_name => "#{current_user.email}'s Number")
 
       @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
-      :voice_url => Rails.application.secrets.twilio_twiml_callback_url, :domain_name => domain_string)
+      :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => domain_string)
 
     rescue Exception => e
       puts e
