@@ -2,14 +2,14 @@ class WebrtcAgentsController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @webrtc_agent = current_user.webrtc_agent
+    @agent = current_user
     
-    if @webrtc_agent.nil?
-      @webrtc_number =  'agent not created'
-      @webrtc_domain = 'agent not created'
+    if @agent.phone_number.nil? || @agent.sip_domain.nil?
+      @number =  'agent not created'
+      @domain = 'agent not created'
     else
-      @webrtc_number = @webrtc_agent.phone_number
-      @webrtc_domain = @webrtc_agent.sip_domain
+      @number = @agent.phone_number
+      @domain = @agent.sip_domain
     end
 
     capability = Twilio::Util::Capability.new Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token

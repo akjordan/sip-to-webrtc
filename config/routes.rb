@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'twilio' => 'webrtc_agents#index'
-  get 'new' => 'webrtc_agents#new'
+  get 'provision' => 'users#provision_twilio'
+
   post 'incoming' => 'twilio#incoming'
 
   root to: 'visitors#index'
