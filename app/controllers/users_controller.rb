@@ -27,12 +27,11 @@ class UsersController < ApplicationController
     # rescue Exception => e
     #   puts "Failure during account provisioning #{e}"
     # end
-    puts current_user.inspect
-    @user = current_user.(sip_domain: "foobarbaz@sip.twilio.com", phone_number: "+14158675309")
-    # @user = current_user.(sip_domain: @sipdomain.domain_name, phone_number: @number.phone_number)
-    if @user.save
+
+    begin
+      @user = current_user.update_attributes(sip_domain: "foobarbaz@sip.twilio.com", phone_number: "+14158675309")
       redirect_to '/twilio',  notice: 'Twilio endpoints were successfully provisioned!'
-    else
+    rescue
       redirect_to '/twilio',  notice: 'Something has gone terribly wrong!'
     end
 

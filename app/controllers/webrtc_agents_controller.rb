@@ -3,7 +3,7 @@ class WebrtcAgentsController < ApplicationController
 
   def index
     @agent = current_user
-    
+
     if @agent.phone_number.nil? || @agent.sip_domain.nil?
       @number =  'agent not created'
       @domain = 'agent not created'
@@ -16,3 +16,5 @@ class WebrtcAgentsController < ApplicationController
     capability.allow_client_incoming current_user.id
    @token = capability.generate()
   end
+
+end

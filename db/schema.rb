@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150215035514) do
+ActiveRecord::Schema.define(version: 20150216132120) do
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -37,15 +37,5 @@ ActiveRecord::Schema.define(version: 20150215035514) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-
-  create_table "webrtc_agents", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "sip_domain"
-    t.string   "phone_number"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "webrtc_agents", ["user_id"], name: "index_webrtc_agents_on_user_id"
 
 end
