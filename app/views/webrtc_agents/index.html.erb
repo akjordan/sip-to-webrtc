@@ -1,7 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <p><%= @domain%></p>
+      <p>    
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/createacl'">Create ACL</button>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/createipcl'">Create IPACL</button>
+        <%= @domain%>
+      </p>
     </div>
     <div class="col-md-4">
       <div class="well well-lg">
