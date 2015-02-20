@@ -6,7 +6,7 @@ class WebrtcAgentsController < ApplicationController
     @client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
 
 
-    if @agent.phone_number.nil? && @agent.sip_domain.nil?
+    if @agent.phone_number.nil? || @agent.sip_domain.nil?
       @number =  'agent not created'
       @domain = 'agent not created'
     else
@@ -15,14 +15,14 @@ class WebrtcAgentsController < ApplicationController
     end
 
     if @agent.ip_acl.nil?
-      @ip_acl_partial = "create-ipacl"
+      @ip_acl_partial = "create_ipacl"
     else
       @ip_acl_partial = "ipacl"
       @ip_acl = @client.account.sip.ip_access_control_lists.get(@agent.ip_acl)
     end
 
     if @agent.auth_acl.nil?
-      @acl_partial = "create-acl"
+      @acl_partial = "create_acl"
     else
       @acl_partial = "acl"
       @auth_acl = @client.account.sip.credential_lists.get(@agent.auth_acl) 
