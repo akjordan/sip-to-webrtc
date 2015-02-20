@@ -12,7 +12,7 @@
         <h4 class="modal-title" id="myModalLabel">Credential List</h4>
       </div>
       <div class="modal-body">
-        <form>
+        <form action="ip" method="post">
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <div class="form-group col-md-6">
             <label>User Name</label>
@@ -24,7 +24,7 @@
             <input type="name" class="form-control" name="username" placeholder="JoeTelecom">
           </div>
           <div class="form-group col-md-6">
-            <label for="exampleInputPassword1">Password</label>
+            <label>Password</label>
               <% @auth_acl.credentials.list.each do |credentials| %>
                 <tr>
                   <%= render partial: "well", object: "•••••••••••"%>
@@ -32,7 +32,7 @@
               <% end %>
             <input type="ip" class="form-control" name="password" placeholder="alphanumeric">
           </div>
-          <button action="/addip" method="post" type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
     </div>
