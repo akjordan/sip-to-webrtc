@@ -40,6 +40,7 @@ class UsersController < ApplicationController
 
   def provision_credential_list
     begin
+
       client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
       credential_list = client.account.sip.credential_lists.create(:friendly_name => "#{current_user.email}")
       current_user.update_attributes(:auth_acl => credential_list.sid )
@@ -55,6 +56,7 @@ class UsersController < ApplicationController
 
   def provision_ip_list
     begin
+
       client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
       ip_access_control_list = client.account.sip.ip_access_control_lists.create(:friendly_name => "#{current_user.email}")
       current_user.update_attributes(:ip_acl => ip_access_control_list.sid )
