@@ -3,6 +3,8 @@ class WebrtcAgentsController < ApplicationController
 
   def index
     @agent = current_user
+    @client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+
 
     if @agent.phone_number.nil? || @agent.sip_domain.nil?
       @number =  'agent not created'
@@ -16,6 +18,7 @@ class WebrtcAgentsController < ApplicationController
       @ip_acl_label = "Create IPACL"
     else
       @ip_acl_label = "Configure IPACL"
+      @ip_acl = @client.account.sip.domains.get(current_user.sip_domain_sid)
     end
 
     if @agent.auth_acl.nil?
