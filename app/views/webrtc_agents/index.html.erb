@@ -2,46 +2,10 @@
   <div class="row">
     <div class="col-md-4">
       <p>
-        <!-- <button type="button" class="btn btn-primary" onclick="window.location.href='/createacl'">Create ACL</button>
-        <button type="button" class="btn btn-primary" onclick="window.location.href='/createipcl'">Create IPACL</button> -->
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-          <%=@ip_acl_label %>
-        </button>
+        <%= render @ip_acl_partial %>
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-              </div>
-              <div class="modal-body">
-                <%= render "ipacl" %>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">
-          <%=@acl_label%>
-        </button>
+        <%= render @acl_partial %>
 
-        <!-- Modal -->
-        <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-              </div>
-              <div class="modal-body">
-                <%= render "acl" %>
-              </div>
-            </div>
-          </div>
-        </div>
         <%= @domain%>
       </p>
     </div>

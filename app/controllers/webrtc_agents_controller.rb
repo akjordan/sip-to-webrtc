@@ -15,16 +15,16 @@ class WebrtcAgentsController < ApplicationController
     end
 
     if @agent.ip_acl.nil?
-      @ip_acl_label = "Create IPACL"
+      @ip_acl_partial = "create-ipacl"
     else
-      @ip_acl_label = "Configure IPACL"
+      @ip_acl_partial = "ipacl"
       @ip_acl = @client.account.sip.ip_access_control_lists.get(@agent.ip_acl)
     end
 
     if @agent.auth_acl.nil?
-      @acl_label = "Create ACL"
+      @acl_partial = "create-acl"
     else
-      @acl_label = "Configure ACL"
+      @acl_partial = "acl"
       @auth_acl = @client.account.sip.credential_lists.get(@agent.auth_acl) 
     end
 
