@@ -12,24 +12,25 @@
                 <h4 class="modal-title" id="myModalLabel">IP Access Control List</h4>
               </div>
               <div class="modal-body">
-                <form>
+                <form action="addip" method="post">
+                  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
                   <div class="form-group col-md-6">
-                    <label for="exampleInputEmail1">Friendly Name</label>
+                    <label>Friendly Name</label>
                     <% @ip_acl.ip_addresses.list.each do |ipAddress| %>
                       <tr>
                         <%= render partial: "well", object: ipAddress.friendly_name%>
                       </tr>
                     <% end %>
-                    <input type="name" class="form-control" id="FN1" placeholder="Friendly Name">
+                    <input type="name" class="form-control" name="friendlyname" placeholder="Friendly Name">
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="exampleInputPassword1">IP Address</label>
+                    <label>IP Address</label>
                       <% @ip_acl.ip_addresses.list.each do |ipAddress| %>
                         <tr>
                           <%= render partial: "well", object: ipAddress.ip_address%>
                         </tr>
                       <% end %>
-                    <input type="ip" class="form-control" id="exampleInputPassword1" placeholder="192.168.2.1">
+                    <input type="ip" class="form-control" name="ip" placeholder="192.168.2.1">
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

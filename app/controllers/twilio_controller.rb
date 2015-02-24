@@ -11,12 +11,11 @@ class TwilioController < ApplicationController
       to_number = params[:To]
       if to_number.include? "sip"
         to_sip = /[^@]+$/.match(to_number).to_s
-        @agent = WebrtcAgent.find_by sip_domain: to_sip
-        client_id = @agent.user_id
+        @agent = User.find_by sip_domain: to_sip
+        client_id = @agent.id
       else
-        @agent = WebrtcAgent.find_by phone_number: to_number
-        puts @agent.inspect
-        client_id = @agent.user_id
+        @agent = User.find_by phone_number: to_number
+        client_id = @agent.id
       end
 
     rescue Exception => e

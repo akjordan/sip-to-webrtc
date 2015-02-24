@@ -65,6 +65,8 @@ $( document ).ready(function() {
     $("#log").text("Incoming connection from " + conn.parameters.From);
   });
 
+ });
+
   function hangup() {
     Twilio.Device.disconnectAll();
   }
@@ -83,6 +85,6 @@ $( document ).ready(function() {
   //   else alert("hi");}
   // }
 
-  });
+ 
 
   </script>

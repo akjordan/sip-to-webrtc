@@ -14,25 +14,21 @@ class UsersController < ApplicationController
 
   def provision_twilio
 
-    # begin
-    #   domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.gsub(/\s+/, "")
-
-    #   client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-    #   @number = client.account.incoming_phone_numbers.create( :area_code => '415',
-    #    :voice_url => "https://akjordan.ngrok.com/incoming", :friendly_name => "#{current_user.email}'s Number")
-
-    #   @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
-    #   :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => domain_string)
-
-    # rescue Exception => e
-    #   puts "Failure during account provisioning #{e}"
-    # end
-
     begin
-      @user = current_user.update_attributes(sip_domain: "foobarbaz@sip.twilio.com",
-      sip_domain_sid: "SD1935754341943eabf9b86d3e89c74d37", phone_number: "+14158675309")
+      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.gsub(/\s+/, "")
+
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      @number = client.account.incoming_phone_numbers.create( :area_code => '415',
+       :voice_url => "https://akjordan.ngrok.com/incoming", :friendly_name => "#{current_user.email}'s Number")
+
+      @sipdomain = client.account.sip.domains.create(:friendly_name => "#{current_user.email}'s SIP domain",
+      :voice_url => "https://akjordan.ngrok.com/incoming", :domain_name => domain_string)
+
+      @user = current_user.update_attributes(sip_domain: @sipdomain.domain_name,
+      sip_domain_sid: @sipdomain.sid, phone_number: @number.phone_number)
+
       redirect_to '/twilio',  notice: 'Twilio endpoints were successfully provisioned!'
-    rescue
+    rescue Exception => e
       redirect_to '/twilio',  notice: "Provisioning failed for reason #{e}"
     end
 
@@ -69,6 +65,34 @@ class UsersController < ApplicationController
       redirect_to '/twilio',  notice: "Twilio ip_access_control_list ceation failed for reason #{e}"
     end
   end
+
+  def add_ip
+    begin
+
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      client.account.sip.ip_access_control_lists.get(current_user.ip_acl).ip_addresses.create(
+      :friendly_name => params[:friendlyname], 
+      :ip_address => params[:ip])
+
+      redirect_to '/twilio',  notice: 'IP added to whitelist!'
+    rescue Exception => e
+      redirect_to '/twilio',  notice: "Adding an IP failed for reason #{e}"
+    end
+  end
+
+  def add_user
+    begin
+
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      client.account.sip.credential_lists.get(current_user.auth_acl).credentials.create(:username => params[:username] ,
+      :password => params[:password])
+
+      redirect_to '/twilio',  notice: 'User added to credential list!'
+    rescue Exception => e
+      redirect_to '/twilio',  notice: "Adding an user failed for reason #{e}"
+    end
+  end
+
 
 
 end

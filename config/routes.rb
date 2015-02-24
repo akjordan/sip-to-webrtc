@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get 'createacl' => 'users#provision_credential_list'
   get 'createipcl' => 'users#provision_ip_list'
 
+  post 'adduser' => 'users#add_user'
+  post 'addip' => 'users#add_ip'
+
 
   post 'incoming' => 'twilio#incoming'
 
