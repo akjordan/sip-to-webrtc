@@ -17,7 +17,7 @@
           <button type="button" class="btn btn-danger" onclick="hangup();">
             Hangup
           </button>
-          <button id="mute-btn" type="button" class="btn btn-default" onclick="mute();">
+          <button id="mute-btn" type="button" class="btn" onclick="mute();">
             Mute
           </button>
         </div>
@@ -74,16 +74,16 @@ $( document ).ready(function() {
     Twilio.Device.activeConnection().accept();
     $("#log").text("Connection active");
   }
-//TODO implement mute
-  // function mute() {
-  //   if (Twilio.Device.activeConnection().isMuted() == false) {
-  //   Twilio.Device.activeConnection().mute(true);
-  // }
-  //   else { if (Twilio.Device.activeConnection().isMuted() == true)
-  //     Twilio.Device.activeConnection().mute(false);
-  //   else alert("hi");}
-  // }
 
- 
+  function mute() {
+    if (Twilio.Device.activeConnection().isMuted() == false) {
+      Twilio.Device.activeConnection().mute(true);
+      $( "#mute-btn" ).addClass( "btn-danger" );
+      }
+    else { if (Twilio.Device.activeConnection().isMuted() == true)
+      Twilio.Device.activeConnection().mute(false);
+      $( "#mute-btn" ).removeClass( "btn-danger" );
+      }
+  }
 
   </script>
