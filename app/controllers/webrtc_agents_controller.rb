@@ -6,6 +6,8 @@ class WebrtcAgentsController < ApplicationController
     @client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
 
 
+    @baseurl = Rails.application.secrets.twilio_twiml_callback_url
+
     if @agent.phone_number.nil? || @agent.sip_domain.nil?
       @number =  'agent not created'
       @domain = 'agent not created'
