@@ -1,12 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
+      <h2> <%= @domain%> </h2>
       <p>
         <%= render @ip_acl_partial %>
 
         <%= render @acl_partial %>
-        <%= @baseurl%>
-        <%= @domain%>
       </p>
     </div>
     <div class="col-md-4">
@@ -26,7 +25,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <p><%= @number%></p>
+      <h2><%= @number%></h2>
     </div>
   </div>
 </div>
