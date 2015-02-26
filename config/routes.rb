@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'twilio' => 'webrtc_agents#index'
+  get 'twilio' => 'webrtc#index'
   get 'provision' => 'users#provision_twilio'
   get 'createacl' => 'users#provision_credential_list'
   get 'createipcl' => 'users#provision_ip_list'

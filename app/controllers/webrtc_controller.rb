@@ -1,4 +1,4 @@
-class WebrtcAgentsController < ApplicationController
+class WebrtcController < ApplicationController
   before_filter :authenticate_user!
 
   def index
