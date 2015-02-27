@@ -3,15 +3,11 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-  end
-
-  def show
-   @user = User.find(params[:id])
-    unless @user == current_user
+    unless current_user.id == 2
       redirect_to :back, :alert => "Access denied."
     end
   end
-
+  
   def provision_twilio
 
     begin

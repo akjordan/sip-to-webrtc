@@ -7,6 +7,6 @@
   <li><%= link_to 'Sign in', new_user_session_path %></li>
   <li><%= link_to 'Sign up', new_user_registration_path %></li>
 <% end %>
-<% if user_signed_in? %>
+<% if user_signed_in? && current_user.id == 1 %>
   <li><%= link_to 'Users', users_path %></li>
 <% end %>

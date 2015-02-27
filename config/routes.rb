@@ -6,8 +6,6 @@ Rails.application.routes.draw do
 
   post 'adduser' => 'users#add_user'
   post 'addip' => 'users#add_ip'
-
-
   post 'incoming' => 'twilio#incoming'
 
   root to: 'visitors#index'
