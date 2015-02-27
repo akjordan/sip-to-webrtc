@@ -30,9 +30,5 @@ class TwilioController < ApplicationController
 
     render_twiml response
   end
-
-  def status 
-    render_twiml Twilio::TwiML::Response.new
-  end
   
 end
