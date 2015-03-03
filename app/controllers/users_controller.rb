@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    unless current_user.id == 2
+    unless current_user.id == 1
       redirect_to :back, :alert => "Access denied."
     end
   end
