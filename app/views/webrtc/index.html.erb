@@ -1,12 +1,10 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <h2> <%= @domain%> </h2>
-      <p>
+      <h3>Send calls to this domain</h3>
+      <div class="well well-sm"><%= @domain%></div>
         <%= render @ip_acl_partial %>
-
         <%= render @acl_partial %>
-      </p>
     </div>
     <div class="col-md-4">
       <div class="well well-lg">
@@ -25,7 +23,8 @@
       </div>
     </div>
     <div class="col-md-4">
-      <h2><%= @number%></h2>
+      <h3>Call this number</h3>
+      <div class="well well-sm"><%= @number%></div>
     </div>
   </div>
 </div>
