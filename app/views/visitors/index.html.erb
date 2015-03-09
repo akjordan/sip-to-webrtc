@@ -1,12 +1,20 @@
 <div class="container">
   <div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4">
-    <h3>Twilio SIP Interface to WebRTC</h3>
-    <p>This is a demo that demonstrates how you can use Twilio SIP interfaces accept calls from any PBX and push them to a WebRTC phone running in the browser. To get started, sign up and we will provision a Twilio phone number and a Twilio SIP endpoint for you. To get started send your</p>
-    <button type="button" class="btn btn-primary" onclick="window.location.href='/users/sign_up'">Sign up</button>
-    <button type="button" class="btn btn-primary" onclick="window.location.href='/users/sign_in'">Sign in</button>
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <h2>Twilio SIP Interface to WebRTC</h2>
+    <p class="lead">Hello there, this is a sample application that demonstrates how you can push calls to a Twilio WebRTC softphone via SIP or PSTN. You can get started in three easy steps.</p>
+    <h4>1. Create an account</h4>
+    <p>Click on "Sign up" and enter your name, email, and company name. Twilio will automatically generate a SIP URL and a phone number for your account.</p>
+    <h4>2. Give us a ring</h4>
+    <p>Call the supplied phone number to make your soft phone ring!</p>
+    <h4>3. Configure access to your SIP domain</h4>
+    <p>Twilio authenticates requests to Twilio SIP domains with a username and/or a whitelisted IP. In order to send calls to Twilio, you must set up at least one of these. If you'd like to authenticate with a username, click "Create ACL", if you'd like to use an IP, click "Create IPACL".</p>
+    <h4>4. Send us an INVITE</h4>
+    <p>Once you've set up your SIP domain to let your traffic through, send us an INVITE from your favorite PBX or softphone. We like using X-Lite and Asterisk but any SIP client will do.</p>
+    <button type="button" class="btn btn-primary btn-block btn-lg" onclick="window.location.href='/users/sign_up'">Sign up</button>
+    <button type="button" class="btn btn-primary btn-block btn-lg" onclick="window.location.href='/users/sign_in'">Sign in</button>
   </div>
-  <div class="col-md-4"></div>
+  <div class="col-md-3"></div>
   </div>
 </div>
