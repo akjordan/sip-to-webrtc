@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <h3>Send calls to this domain</h3>
+      <h3>Send calls to this SIP address</h3>
       <div class="well well-sm"><%= @domain%></div>
         <%= render @ip_acl_partial %>
         <%= render @acl_partial %>
@@ -29,17 +29,12 @@
   </div>
 </div>
 
-<script type="text/javascript"
-  src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js">
-</script>
-
-
 <script type="text/javascript">
 
-/* Create the Client with a Capability Token */
+var ready;
+ready = function()  {
 
-$( document ).ready(function() {
-    Twilio.Device.setup("<%= @token %>", {debug: true});
+  Twilio.Device.setup("<%= @token %>", {debug: true});
 
   /* Let us know when the client is ready. */
   Twilio.Device.ready(function (device) {
@@ -63,7 +58,11 @@ $( document ).ready(function() {
     $("#log").text("Incoming connection from " + conn.parameters.From);
   });
 
- });
+};
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
+
 
   function hangup() {
     Twilio.Device.disconnectAll();
@@ -85,4 +84,4 @@ $( document ).ready(function() {
       }
   }
 
-  </script>
+</script>
