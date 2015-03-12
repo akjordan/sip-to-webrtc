@@ -23,9 +23,9 @@ class UsersController < ApplicationController
       @user = current_user.update_attributes(sip_domain: @sipdomain.domain_name,
       sip_domain_sid: @sipdomain.sid, phone_number: @number.phone_number)
 
-      redirect_to webrtc_path,  notice: 'Twilio endpoints were successfully provisioned!'
+      redirect_to webrtc_path,  notice: 'Twilio endpoints created'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Provisioning failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Twilio endpoints were not created: #{e}"
     end
 
   end
@@ -40,9 +40,9 @@ class UsersController < ApplicationController
       credential_list_mapping = client.account.sip.domains.get(current_user.sip_domain_sid)
       .credential_list_mappings.create(:credential_list_sid => credential_list.sid)
 
-      redirect_to webrtc_path,  notice: 'Twilio credential_list created, and associated!'
+      redirect_to webrtc_path,  notice: 'Twilio credential list created'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Twilio credential_list ceation failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Credential list failed: #{e}"
     end
   end
 
@@ -56,9 +56,9 @@ class UsersController < ApplicationController
       ip_access_control_list_mapping = client.account.sip.domains.get(current_user.sip_domain_sid)
       .ip_access_control_list_mappings.create(:ip_access_control_list_sid => ip_access_control_list.sid)
 
-      redirect_to webrtc_path,  notice: 'Twilio ip_access_control_list  created, and associated!'
+      redirect_to webrtc_path,  notice: 'Twilio IP access control list created'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Twilio ip_access_control_list ceation failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "IP access control list failed: #{e}"
     end
   end
 
@@ -70,9 +70,9 @@ class UsersController < ApplicationController
       :friendly_name => params[:friendlyname], 
       :ip_address => params[:ip])
 
-      redirect_to webrtc_path,  notice: 'IP added to whitelist!'
+      redirect_to webrtc_path,  notice: 'IP added to whitelist'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Adding an IP failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "IP failed: #{e}"
     end
   end
 
@@ -83,9 +83,9 @@ class UsersController < ApplicationController
       client.account.sip.credential_lists.get(current_user.auth_acl).credentials.create(:username => params[:username] ,
       :password => params[:password])
 
-      redirect_to webrtc_path,  notice: 'User added to credential list!'
+      redirect_to webrtc_path,  notice: 'User added to credential list'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Adding an user failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "User failed: #{e}"
     end
   end
 
@@ -99,7 +99,7 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'IP access list deleted'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Deleting and IP access list failed for reason #{e} #{current_user.ip_acl}"
+      redirect_to webrtc_path,  alert: "Deleting IP access list failed: #{e}"
     end
   end
 
@@ -111,12 +111,10 @@ class UsersController < ApplicationController
       client.account.sip.credential_lists.get(current_user.auth_acl).delete()
       current_user.update_attributes(:auth_acl => nil )
 
-      redirect_to webrtc_path,  notice: 'credential list deleted'
+      redirect_to webrtc_path,  notice: 'Credential list deleted'
     rescue Exception => e
-      redirect_to webrtc_path,  alert: "Deleting credential list failed for reason #{e} #{current_user.ip_acl}"
+      redirect_to webrtc_path,  alert: "Deleting credential list failed: #{e}"
     end
   end
-
-
 
 end
