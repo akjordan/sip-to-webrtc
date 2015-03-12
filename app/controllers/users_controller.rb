@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def provision_twilio
 
     begin
-      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}-wrtc.sip.twilio.com".downcase.gsub(/\s+/, "")
+      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}.sip.twilio.com".downcase.gsub(/\s+/, "")
 
       client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
       @number = client.account.incoming_phone_numbers.create( :area_code => '415',
