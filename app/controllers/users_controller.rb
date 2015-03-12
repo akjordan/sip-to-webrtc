@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'Twilio endpoints were successfully provisioned!'
     rescue Exception => e
-      redirect_to webrtc_path,  notice: "Provisioning failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Provisioning failed for reason #{e}"
     end
 
   end
@@ -42,7 +42,7 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'Twilio credential_list created, and associated!'
     rescue Exception => e
-      redirect_to webrtc_path,  notice: "Twilio credential_list ceation failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Twilio credential_list ceation failed for reason #{e}"
     end
   end
 
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'Twilio ip_access_control_list  created, and associated!'
     rescue Exception => e
-      redirect_to webrtc_path,  notice: "Twilio ip_access_control_list ceation failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Twilio ip_access_control_list ceation failed for reason #{e}"
     end
   end
 
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'IP added to whitelist!'
     rescue Exception => e
-      redirect_to webrtc_path,  notice: "Adding an IP failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Adding an IP failed for reason #{e}"
     end
   end
 
@@ -85,7 +85,35 @@ class UsersController < ApplicationController
 
       redirect_to webrtc_path,  notice: 'User added to credential list!'
     rescue Exception => e
-      redirect_to webrtc_path,  notice: "Adding an user failed for reason #{e}"
+      redirect_to webrtc_path,  alert: "Adding an user failed for reason #{e}"
+    end
+  end
+
+    def delete_ip_list
+    begin
+
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      client.account.sip.domains.get(current_user.sip_domain_sid).ip_access_control_list_mappings.get(current_user.ip_acl).delete()
+      client.account.sip.ip_access_control_lists.get(current_user.ip_acl).delete()
+      current_user.update_attributes(:ip_acl => nil )
+
+      redirect_to webrtc_path,  notice: 'IP access list deleted'
+    rescue Exception => e
+      redirect_to webrtc_path,  alert: "Deleting and IP access list failed for reason #{e} #{current_user.ip_acl}"
+    end
+  end
+
+      def delete_credential_list
+    begin
+
+      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
+      client.account.sip.domains.get(current_user.sip_domain_sid).credential_list_mappings.get(current_user.auth_acl).delete()
+      client.account.sip.credential_lists.get(current_user.auth_acl).delete()
+      current_user.update_attributes(:auth_acl => nil )
+
+      redirect_to webrtc_path,  notice: 'credential list deleted'
+    rescue Exception => e
+      redirect_to webrtc_path,  alert: "Deleting credential list failed for reason #{e} #{current_user.ip_acl}"
     end
   end
 

@@ -12,7 +12,7 @@
           <button type="button" class="btn btn-success" onclick="accept();">
             Accept
           </button>
-          <button type="button" class="btn btn-danger" onclick="hangup();">
+          <button id="hangup-btn" type="button" class="btn btn-danger" onclick="hangup();">
             Hangup
           </button>
           <button id="mute-btn" type="button" class="btn" onclick="mute();">
@@ -56,6 +56,8 @@ ready = function()  {
 
   Twilio.Device.incoming(function (conn) {
     $("#log").text("Incoming connection from " + conn.parameters.From);
+    $("#hangup-btn").text("Reject");
+    $("#hangup-btn").attr("onclick","reject()");
   });
 
 };
@@ -71,6 +73,15 @@ $(document).on('page:load', ready);
   function accept() {
     Twilio.Device.activeConnection().accept();
     $("#log").text("Connection active");
+    $("#hangup-btn").text("Hangup");
+    $("#hangup-btn").attr("onclick","hangup()");
+  }
+
+    function reject() {
+    Twilio.Device.activeConnection().reject();
+    $("#log").text("Connection rejected");
+    $("#hangup-btn").text("Hangup");
+    $("#hangup-btn").attr("onclick","hangup()");
   }
 
   function mute() {
