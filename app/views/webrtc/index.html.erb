@@ -26,11 +26,13 @@ ready = function()  {
   /* Let us know when the client is ready. */
   Twilio.Device.ready(function (device) {
     $("#log").text("Client is ready ");
+    $("#log").toggleClass("alert-info alert-success");
   });
  
   /* Report any errors on the screen */
   Twilio.Device.error(function (error) {
     $("#log").text("Error: " + error.message);
+    $("#log").toggleClass("alert-info alert-success", remove);
   });
  
   Twilio.Device.connect(function (conn) {
