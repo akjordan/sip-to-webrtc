@@ -9,25 +9,7 @@
         <%= render @acl_partial %>
     </div>
     <div class="col-md-4">
-      <div class="row">
-        <div class="col-md-4"><h1>Thsi is urrrrrible</h1></div>
-        <div class="col-md-4"><h1>Thsi is urrrrrible</h1></div>
-        <div class="col-md-4"><h1>Thsi is urrrrrible</h1></div>
-      </div>
-      <div class="well well-lg">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-success" onclick="accept();">
-            Accept
-          </button>
-          <button id="hangup-btn" type="button" class="btn btn-danger" onclick="hangup();">
-            Hangup
-          </button>
-          <button id="mute-btn" type="button" class="btn" onclick="mute();">
-            Mute
-          </button>
-        </div>
-        <div class="panel-body" id="log" >Connecting to Twilio...</div>
-      </div>
+      <%= render 'softphone' %>
     </div>
     <div class="col-md-4">
     </div>
@@ -52,15 +34,20 @@ ready = function()  {
   });
  
   Twilio.Device.connect(function (conn) {
-    $("#log").text("SID:  " +  conn.parameters.CallSid);
+    $("#log").text("Call connected");
   });
   
   Twilio.Device.disconnect(function (conn) {
     $("#log").text("Call ended");
+    $("#to").text();
+    $("#from").text();
   });
 
   Twilio.Device.incoming(function (conn) {
-    $("#log").text("Incoming connection from " + conn.parameters.From);
+    $("#log").text("Incoming call");
+    $("#to").text(conn.parameters.To);
+    $("#from").text(conn.parameters.From);
+
     $("#hangup-btn").text("Reject");
     $("#hangup-btn").attr("onclick","reject()");
   });

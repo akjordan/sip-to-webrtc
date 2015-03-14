@@ -1,0 +1,35 @@
+<hr/>
+<div class="well well-lg">
+  <table class="table">
+  <tr>
+    <td>To:</td>
+    <td id="to"></td>
+  </tr>
+    <tr>
+    <td>From:</td>
+    <td id="from"></td>
+  </tr>
+  <tr>
+    <td>Agent:</td>
+    <td><%= @agent_name%></td>
+  </tr>
+</table>
+  <div class="btn-group btn-group-justified" role="group">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-success" onclick="accept();">
+        Accept
+      </button>
+    </div>
+    <div class="btn-group" role="group">
+    <button id="hangup-btn" type="button" class="btn btn-danger" onclick="hangup();">
+      Hangup
+    </button>
+  </div>
+  <div class="btn-group" role="group">
+    <button id="mute-btn" type="button" class="btn" onclick="mute();">
+      Mute
+    </button>
+  </div>
+  </div>
+  <div class="panel-body text-center" id="log" >Connecting to Twilio...</div>
+</div>
