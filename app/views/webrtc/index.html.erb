@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
+      <hr/>
       <h3>Call this number</h3>
       <div class="well well-sm"><%= @number%></div>
       <h3>Send calls to this SIP address</h3>
@@ -47,7 +48,7 @@ ready = function()  {
 
   Twilio.Device.incoming(function (conn) {
     $("#log").text("Incoming call");
-    $("#to").text(conn.parameters.To);
+    $("#to").text("<%= @agent_name%>");
     $("#from").text(conn.parameters.From);
 
     $("#hangup-btn").text("Reject");
@@ -76,6 +77,8 @@ $(document).on('page:load', ready);
     $("#log").text("Connection rejected");
     $("#hangup-btn").text("Hangup");
     $("#hangup-btn").attr("onclick","hangup()");
+    $("#to").text();
+    $("#from").text();
   }
 
   function mute() {
