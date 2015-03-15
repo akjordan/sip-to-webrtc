@@ -32,7 +32,7 @@ ready = function()  {
   /* Report any errors on the screen */
   Twilio.Device.error(function (error) {
     $("#log").text("Error: " + error.message);
-    $("#log").toggleClass("alert-info alert-success", remove);
+    $("#log").toggleClass("alert-info alert-success");
   });
  
   Twilio.Device.connect(function (conn) {
