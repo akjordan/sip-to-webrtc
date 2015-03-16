@@ -12,8 +12,14 @@
     <p>Twilio authenticates requests to Twilio SIP domains with a username and/or a whitelisted IP. In order to send calls to Twilio, you must set up at least one of these. If you'd like to authenticate with a username, click "Create credential list", if you'd like to use an IP, click "Create IP whitelist".</p>
     <h4>4. Send us an INVITE</h4>
     <p>Once you've set up your SIP domain to let your traffic through, send us an INVITE from your favorite PBX or softphone. We like using X-Lite and Asterisk but any SIP client will do.</p>
-    <button type="button" class="btn btn-primary btn-block btn-lg" onclick="window.location.href='/users/sign_up'">Sign up</button>
-    <button type="button" class="btn btn-primary btn-block btn-lg" onclick="window.location.href='/users/sign_in'">Sign in</button>
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/users/sign_up'">Sign up</button>
+      </div>
+      <div class="btn-group" role="group">
+      <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/users/sign_in'">Sign in</button>
+    </div>
+    </div>
   </div>
   <div class="col-md-3"></div>
   </div>
