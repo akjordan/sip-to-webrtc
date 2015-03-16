@@ -63,6 +63,8 @@ $(document).on('page:load', ready);
 
   function hangup() {
     Twilio.Device.disconnectAll();
+    $("#to").text();
+    $("#from").text();
   }
 
   function accept() {
