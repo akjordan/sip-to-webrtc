@@ -42,8 +42,8 @@ ready = function()  {
   
   Twilio.Device.disconnect(function (conn) {
     $("#log").text("Call ended");
-    $("#to").text();
-    $("#from").text();
+    $("#to").empty();
+    $("#from").empty();
   });
 
   Twilio.Device.incoming(function (conn) {
@@ -63,8 +63,8 @@ $(document).on('page:load', ready);
 
   function hangup() {
     Twilio.Device.disconnectAll();
-    $("#to").text();
-    $("#from").text();
+    $("#to").empty();
+    $("#from").empty();
   }
 
   function accept() {
@@ -79,8 +79,8 @@ $(document).on('page:load', ready);
     $("#log").text("Connection rejected");
     $("#hangup-btn").text("Hangup");
     $("#hangup-btn").attr("onclick","hangup()");
-    $("#to").text();
-    $("#from").text();
+    $("#to").empty();
+    $("#from").empty();
   }
 
   function mute() {
