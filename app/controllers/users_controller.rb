@@ -8,108 +8,127 @@ class UsersController < ApplicationController
   end
 
   def provision_twilio
-    begin
-      domain_string = "#{Faker::Address.city}-#{Faker::Address.building_number}.sip.twilio.com".downcase.gsub(/\s+/, "")
+    rest_client = create_rest_client
+    @number = provision_number(rest_client)
 
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      @number = client.account.incoming_phone_numbers.create(
-        area_code: '415',
-        voice_url: Rails.application.secrets.twilio_twiml_callback_url,
-        friendly_name: "#{current_user.email}'s Number")
+    @sipdomain = provision_domain(rest_client)
 
-      @sipdomain = client.account.sip.domains.create(
-        friendly_name: "#{current_user.email}'s SIP domain",
-        voice_url: Rails.application.secrets.twilio_twiml_callback_url,
-        domain_name: domain_string)
-
-      @user = current_user.update_attributes(
-        sip_domain: @sipdomain.domain_name,
-        sip_domain_sid: @sipdomain.sid,
-        phone_number: @number.phone_number)
-      redirect_to webrtc_path,  notice: 'Twilio endpoints created'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "Twilio endpoints were not created: #{e}"
-    end
+    @user = current_user.update_attributes(
+      sip_domain: @sipdomain.domain_name,
+      sip_domain_sid: @sipdomain.sid,
+      phone_number: @number.phone_number)
+    success('Twilio endpoints created')
+  rescue StandardError => e
+    failure("Twilio endpoints were not created: #{e}")
   end
 
   def provision_credential_list
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      credential_list = client.account.sip.credential_lists.create(friendly_name: "#{current_user.email}")
-      current_user.update_attributes(auth_acl: credential_list.sid )
+    rest_client = create_rest_client
+    credential_list = rest_client.account.sip.credential_lists
+      .create(friendly_name: "#{current_user.email}")
+    current_user.update_attributes(auth_acl: credential_list.sid)
 
-      credential_list_mapping = client.account.sip.domains.get(current_user.sip_domain_sid)
+    rest_client.account.sip.domains.get(current_user.sip_domain_sid)
       .credential_list_mappings.create(credential_list_sid: credential_list.sid)
 
-      redirect_to webrtc_path,  notice: 'Twilio credential list created'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "Credential list failed: #{e}"
-    end
+    success('Twilio credential list created')
+  rescue StandardError => e
+    failure("Credential list failed: #{e}")
   end
 
   def provision_ip_list
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      ip_access_control_list = client.account.sip.ip_access_control_lists.create(friendly_name: "#{current_user.email}")
-      current_user.update_attributes(ip_acl: ip_access_control_list.sid )
+    rest_client = create_rest_client
+    ip_access_control_list = rest_client.account.sip.ip_access_control_lists
+      .create(friendly_name: "#{current_user.email}")
+    current_user.update_attributes(ip_acl: ip_access_control_list.sid)
 
-      ip_access_control_list_mapping = client.account.sip.domains.get(current_user.sip_domain_sid)
-      .ip_access_control_list_mappings.create(ip_access_control_list_sid: ip_access_control_list.sid)
+    rest_client.account.sip.domains.get(current_user.sip_domain_sid)
+      .ip_access_control_list_mappings
+      .create(ip_access_control_list_sid: ip_access_control_list.sid)
 
-      redirect_to webrtc_path,  notice: 'Twilio IP access control list created'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "IP access control list failed: #{e}"
-    end
+    success('Twilio IP access control list created')
+  rescue StandardError => e
+    failure("IP access control list failed: #{e}")
   end
 
   def add_ip
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      client.account.sip.ip_access_control_lists.get(current_user.ip_acl).ip_addresses.create(
-      friendly_name: params[:friendlyname], 
-      ip_address: params[:ip])
+    create_rest_client.account.sip.ip_access_control_lists
+      .get(current_user.ip_acl)
+      .ip_addresses.create(
+        friendly_name: params[:friendlyname],
+        ip_address: params[:ip])
 
-      redirect_to webrtc_path,  notice: 'IP added to whitelist'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "IP failed: #{e}"
-    end
+    success('IP added to whitelist')
+  rescue StandardError => e
+    redirect_to webrtc_path,  alert: "IP failed: #{e}"
   end
 
   def add_user
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      client.account.sip.credential_lists.get(current_user.auth_acl).credentials.create(username: params[:username] ,
-      password: params[:password])
+    create_rest_client.account.sip.credential_lists
+      .get(current_user.auth_acl)
+      .credentials.create(
+        username: params[:username],
+        password: params[:password])
 
-      redirect_to webrtc_path,  notice: 'User added to credential list'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "User failed: #{e}"
-    end
+    success('User added to credential list')
+  rescue StandardError => e
+    failure("User failed: #{e}")
   end
 
-    def delete_ip_list
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      client.account.sip.domains.get(current_user.sip_domain_sid).ip_access_control_list_mappings.get(current_user.ip_acl).delete()
-      client.account.sip.ip_access_control_lists.get(current_user.ip_acl).delete()
-      current_user.update_attributes(ip_acl: nil )
+  def delete_ip_list
+    client = create_rest_client
+    client.account.sip.domains.get(current_user.sip_domain_sid)
+      .ip_access_control_list_mappings.get(current_user.ip_acl).delete
+    client.account.sip.ip_access_control_lists.get(current_user.ip_acl).delete
+    current_user.update_attributes(ip_acl: nil)
 
-      redirect_to webrtc_path,  notice: 'IP access list deleted'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "Deleting IP access list failed: #{e}"
-    end
+    success('IP access list deleted')
+  rescue StandardError => e
+    failure("Deleting IP access list failed: #{e}")
   end
 
-      def delete_credential_list
-    begin
-      client = Twilio::REST::Client.new(Rails.application.secrets.twilio_account_sid, Rails.application.secrets.twilio_auth_token)
-      client.account.sip.domains.get(current_user.sip_domain_sid).credential_list_mappings.get(current_user.auth_acl).delete()
-      client.account.sip.credential_lists.get(current_user.auth_acl).delete()
-      current_user.update_attributes(auth_acl: nil )
+  def delete_credential_list
+    client = create_rest_client
+    client.account.sip.domains.get(current_user.sip_domain_sid)
+      .credential_list_mappings.get(current_user.auth_acl).delete
+    client.account.sip.credential_lists.get(current_user.auth_acl).delete
+    current_user.update_attributes(auth_acl: nil)
 
-      redirect_to webrtc_path,  notice: 'Credential list deleted'
-    rescue StandardError => e
-      redirect_to webrtc_path,  alert: "Deleting credential list failed: #{e}"
-    end
+    success('Credential list deleted')
+  rescue StandardError => e
+    failure("Deleting credential list failed: #{e}")
+  end
+
+  def create_rest_client
+    Twilio::REST::Client.new(
+      Rails.application.secrets.twilio_account_sid,
+      Rails.application.secrets.twilio_auth_token)
+  end
+
+  def success(message)
+    redirect_to webrtc_path,  notice: message
+  end
+
+  def failure(message)
+    redirect_to webrtc_path,  alert: message
+  end
+
+  def new_domain_string
+    "#{Faker::Address.city}-#{Faker::Address.building_number}.sip.twilio.com"
+      .downcase.gsub(/\s+/, '')
+  end
+
+  def provision_number(rest_client)
+    rest_client.account.incoming_phone_numbers.create(
+      area_code: '415',
+      voice_url: Rails.application.secrets.twilio_twiml_callback_url,
+      friendly_name: "#{current_user.email}'s Number")
+  end
+
+  def provision_domain(rest_client)
+    rest_client.account.sip.domains.create(
+      friendly_name: "#{current_user.email}'s SIP domain",
+      voice_url: Rails.application.secrets.twilio_twiml_callback_url,
+      domain_name: new_domain_string)
   end
 end
