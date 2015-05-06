@@ -1,3 +1,4 @@
+# Redirects the user to the provisioning process after registration
 class RegistrationsController < Devise::RegistrationsController
   protected
 
