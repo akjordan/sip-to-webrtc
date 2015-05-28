@@ -12,6 +12,6 @@ Rails.application.routes.draw do
   post 'addip' => 'users#add_ip'
   post 'incoming' => 'twilio#return_twiml'
 
-  devise_for :users, :controllers => { :registrations => "registrations" }
+  devise_for :users, controllers: { registrations: 'registrations' }
   resources :users
 end
