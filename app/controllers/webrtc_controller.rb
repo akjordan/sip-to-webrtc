@@ -1,3 +1,4 @@
+# Prepares the main WebRTC view to be rendered
 class WebrtcController < ApplicationController
   before_filter :authenticate_user!
 
